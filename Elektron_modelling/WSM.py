@@ -7,17 +7,17 @@ def nulte_led(A, Z):
 
     return(masseP + masseN)
 
-def første_led(A):
+def volumen_led(A):
     a1 = 15.75              #Mev
 
     return(a1 * A)
 
-def andet_led(A):
+def overflade_led(A):
     a2 = 17.8               #MeV
 
     return(a2 * (A ** (2/3)))
 
-def tredje_led(A, Z):
+def coulomb_led(A, Z):
     a3 = 0.711              #MeV
     tæller = Z * (Z - 1)
     nævner = A ** (1/3)
@@ -25,7 +25,7 @@ def tredje_led(A, Z):
 
     return(a3 * (tæller/nævner))
 
-def fjerde_led(A, Z):
+def assymetri_led(A, Z):
     a4 = 23.7               #MeV
     tæller = (A - 2*Z) **2
 
@@ -43,7 +43,7 @@ def fermi_led(A, Z):
             return(-fermiLed)
 
 def M(A, Z):
-    bindingsEnergien = første_led(A) - andet_led(A) - tredje_led(A, Z) - fjerde_led(A, Z) + fermi_led(A, Z)
+    bindingsEnergien = volumen_led(A) - overflade_led(A) - coulomb_led(A, Z) - assymetri_led(A, Z) + fermi_led(A, Z)
     MeVtoJoules = bindingsEnergien * 1.6E-13
     
     return(MeVtoJoules)
