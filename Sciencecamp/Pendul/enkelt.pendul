@@ -1,0 +1,73 @@
+import math
+
+r = 10      # m 
+g = -9.82   # m/s^2 
+m = 1       # kg
+Fg = g * m  # kg m/s^2
+
+vy = 0      # m/s
+vx = 0      # m/s
+vTotal = 0  # m/s
+
+dt = 0.001  # s
+t = 0       # s
+
+xPendul = -5 # mellem -r og +r
+yPendul = (r**2 + xPendul**2)**(1/2) # Problem her 
+xStart  = 0
+yStart  = 0
+
+done = False
+
+def get_vinkel(xPendul):
+    brøk = abs(xPendul) / r
+    vinkelPendul = math.degrees(math.asin(brøk))
+    
+    return(vinkelPendul)
+
+def get_afstand(yPendul, xPendul, yStart, xStart):
+    dy = yPendul - yStart
+    dx = xPendul - xStart
+    hypotenuse = (dy**2 + dx**2)**(1/2)
+    
+    return(hypotenuse)
+
+def get_snorkraft(): 
+    return()
+
+
+for i in range (0): 
+    vinkel1 = get_vinkel(xPendul)
+    vinkel2 = 90 - vinkel1
+
+    gProj = Fg / math.degrees(math.cos(vinkel1))
+    Fc = (m * vTotal**2) / r**2
+
+    Fres = gProj + Fc
+    Fs   = - Fres
+
+    Fsy = Fs * math.degrees(math.cos(vinkel2))
+    Fsx = Fs * math.degrees(math.sin(vinkel2))
+
+    asy = (Fsy + Fg) / m 
+    asx = Fsx / m 
+
+    vy      += asy * dt
+    vx      += asx * dt
+
+    yPendul += vy * dt
+    xPendul += vx * dt
+
+    t += dt
+
+    print(yPendul)
+    print(xPendul)
+    print(get_afstand(yPendul, xPendul, yStart, xStart))
+
+
+
+
+
+
+
+print(get_vinkel(xPendul))
