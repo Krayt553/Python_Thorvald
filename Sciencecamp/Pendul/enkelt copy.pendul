@@ -1,0 +1,66 @@
+import math
+import matplotlib.pyplot as plt
+
+r  = 10     # m 
+g  = -9.82  # m/s^2 
+m  = 1      # kg
+Fg = g * m  # kg m/s^2
+
+vy =     0  # m/s
+vx =     0  # m/s
+vTotal = 0  # m/s
+
+dt  = 0.05  # s
+t   = 0     # s
+
+xPendul = 5 # mellem -r og +r
+yPendul = -(r**2 - xPendul**2)**(1/2) 
+xStart  = 0
+yStart  = 0
+
+done = False
+
+def get_afstand(yPendul, xPendul, yStart, xStart):
+    dy = yPendul - yStart
+    dx = xPendul - xStart
+    hypotenuse = (dy**2 + dx**2)**(1/2)
+    
+    return(hypotenuse)
+
+for i in range (10000): 
+    vinkel = math.atan2(xPendul, yPendul) - math.pi
+    vTotal = (vy**2 + vx**2)**(1/2)
+
+    gProj = Fg * math.cos(vinkel) 
+    Fc = -((m * vTotal**2) / r)
+
+    Fres = gProj + Fc
+    Fs   = - Fres
+
+    Fsy = Fs * math.cos(vinkel)
+    Fsx = Fs * math.sin(vinkel)
+
+    asy = (Fsy + Fg) / m 
+    asx = Fsx / m 
+
+    vy      += asy * dt
+    vx      += asx * dt
+
+    yPendul += vy * dt
+    xPendul += vx * dt
+
+    yStorage = [yStart, yPendul]
+    xStorage = [xStart, xPendul]
+
+    plt.clf()
+    plt.axis([-2*r,2*r,-2*r,2*r])
+    plt.plot(xStorage, yStorage, markersize=10) 
+    plt.plot([xPendul, xPendul+0.000001], [yPendul, yPendul+0.000001], color='b', marker='o', markersize=20) 
+    plt.pause(dt)
+
+
+    if 0.05 < vinkel < -0.05:
+        print(f"Tiden er: {t}")
+
+    
+    t += dt

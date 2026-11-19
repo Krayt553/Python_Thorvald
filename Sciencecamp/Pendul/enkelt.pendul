@@ -1,17 +1,17 @@
 import math
 import matplotlib.pyplot as plt
 
-r = 10      # m 
-g = -9.82   # m/s^2 
-m = 1       # kg
+r  = 10     # m 
+g  = -9.82  # m/s^2 
+m  = 1      # kg
 Fg = g * m  # kg m/s^2
 
-vy = 0      # m/s
-vx = 0      # m/s
+vy =     0  # m/s
+vx =     0  # m/s
 vTotal = 0  # m/s
 
-dt = 0.01  # s
-t = 0       # s
+dt  = 0.1  # s
+t   = 0     # s
 
 xPendul = 5 # mellem -r og +r
 yPendul = -(r**2 - xPendul**2)**(1/2) 
@@ -20,12 +20,6 @@ yStart  = 0
 
 done = False
 
-def get_vinkel(xPendul):
-    brøk = xPendul / r
-    vinkelPendul = math.degrees(math.asin(brøk))
-    
-    return(vinkelPendul)
-
 def get_afstand(yPendul, xPendul, yStart, xStart):
     dy = yPendul - yStart
     dx = xPendul - xStart
@@ -33,36 +27,24 @@ def get_afstand(yPendul, xPendul, yStart, xStart):
     
     return(hypotenuse)
 
-def get_snorkraft(): 
-    return()
+for i in range (10000): 
+    vinkel = math.atan2(xPendul, yPendul) - math.pi
+    vTotal = (vy**2 + vx**2)**(1/2)
 
-
-for i in range (100000): 
-    vinkel = get_vinkel(xPendul)
-
-    gProj = Fg * math.degrees(math.cos(vinkel)) 
+    gProj = Fg * math.cos(vinkel) 
     Fc = -((m * vTotal**2) / r)
 
     Fres = gProj + Fc
     Fs   = - Fres
 
-    Fsy = Fs * math.degrees(math.cos(vinkel))
-    Fsx = Fs * math.degrees(math.sin(vinkel))
-
-    print(f"kraften nedad: {Fsy}")
+    Fsy = Fs * math.cos(vinkel)
+    Fsx = Fs * math.sin(vinkel)
 
     asy = (Fsy + Fg) / m 
     asx = Fsx / m 
 
-    print(f"accelerationen nedad: {asy}")
-
     vy      += asy * dt
     vx      += asx * dt
-
-    print(f"hastigheden nedad: {vy}")
-    print("---"*10)
-
-    vTotal = (vy**2 + vx**2)**(1/2)
 
     yPendul += vy * dt
     xPendul += vx * dt
@@ -70,10 +52,16 @@ for i in range (100000):
     yStorage = [yStart, yPendul]
     xStorage = [xStart, xPendul]
 
-    t += dt
-
     plt.clf()
-    plt.axis([-r,r,-r,r])
+    plt.axis([-2*r,2*r,-2*r,2*r])
     plt.plot(xStorage, yStorage, markersize=10) 
     plt.plot([xPendul, xPendul+0.000001], [yPendul, yPendul+0.000001], color='b', marker='o', markersize=20) 
     plt.pause(dt)
+
+
+    if vinkel > -0.1:
+        print(f"Tiden er: {t}")
+        print("---" * 10)
+
+    
+    t += dt
