@@ -1,4 +1,5 @@
 import math
+import matplotlib.pyplot as plt
 
 r = 10      # m 
 g = -9.82   # m/s^2 
@@ -9,18 +10,18 @@ vy = 0      # m/s
 vx = 0      # m/s
 vTotal = 0  # m/s
 
-dt = 0.001  # s
+dt = 0.01  # s
 t = 0       # s
 
-xPendul = -5 # mellem -r og +r
-yPendul = (r**2 + xPendul**2)**(1/2) # Problem her 
+xPendul = 5 # mellem -r og +r
+yPendul = -(r**2 - xPendul**2)**(1/2) 
 xStart  = 0
 yStart  = 0
 
 done = False
 
 def get_vinkel(xPendul):
-    brøk = abs(xPendul) / r
+    brøk = xPendul / r
     vinkelPendul = math.degrees(math.asin(brøk))
     
     return(vinkelPendul)
@@ -36,38 +37,43 @@ def get_snorkraft():
     return()
 
 
-for i in range (0): 
-    vinkel1 = get_vinkel(xPendul)
-    vinkel2 = 90 - vinkel1
+for i in range (100000): 
+    vinkel = get_vinkel(xPendul)
 
-    gProj = Fg / math.degrees(math.cos(vinkel1))
-    Fc = (m * vTotal**2) / r**2
+    gProj = Fg * math.degrees(math.cos(vinkel)) 
+    Fc = -((m * vTotal**2) / r)
 
     Fres = gProj + Fc
     Fs   = - Fres
 
-    Fsy = Fs * math.degrees(math.cos(vinkel2))
-    Fsx = Fs * math.degrees(math.sin(vinkel2))
+    Fsy = Fs * math.degrees(math.cos(vinkel))
+    Fsx = Fs * math.degrees(math.sin(vinkel))
+
+    print(f"kraften nedad: {Fsy}")
 
     asy = (Fsy + Fg) / m 
     asx = Fsx / m 
 
+    print(f"accelerationen nedad: {asy}")
+
     vy      += asy * dt
     vx      += asx * dt
+
+    print(f"hastigheden nedad: {vy}")
+    print("---"*10)
+
+    vTotal = (vy**2 + vx**2)**(1/2)
 
     yPendul += vy * dt
     xPendul += vx * dt
 
+    yStorage = [yStart, yPendul]
+    xStorage = [xStart, xPendul]
+
     t += dt
 
-    print(yPendul)
-    print(xPendul)
-    print(get_afstand(yPendul, xPendul, yStart, xStart))
-
-
-
-
-
-
-
-print(get_vinkel(xPendul))
+    plt.clf()
+    plt.axis([-r,r,-r,r])
+    plt.plot(xStorage, yStorage, markersize=10) 
+    plt.plot([xPendul, xPendul+0.000001], [yPendul, yPendul+0.000001], color='b', marker='o', markersize=20) 
+    plt.pause(dt)
