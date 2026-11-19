@@ -18,16 +18,9 @@ yPendul = -(r**2 - xPendul**2)**(1/2)
 xStart  = 0
 yStart  = 0
 
-done = False
-
-def get_afstand(yPendul, xPendul, yStart, xStart):
-    dy = yPendul - yStart
-    dx = xPendul - xStart
-    hypotenuse = (dy**2 + dx**2)**(1/2)
-    
-    return(hypotenuse)
-
 for i in range (10000): 
+    
+    # Det første pendul. 
     vinkel = math.atan2(xPendul, yPendul) - math.pi
     vTotal = (vy**2 + vx**2)**(1/2)
 
@@ -57,10 +50,5 @@ for i in range (10000):
     plt.plot(xStorage, yStorage, markersize=10) 
     plt.plot([xPendul, xPendul+0.000001], [yPendul, yPendul+0.000001], color='b', marker='o', markersize=20) 
     plt.pause(dt)
-
-
-    if 0.05 < vinkel < -0.05:
-        print(f"Tiden er: {t}")
-
     
     t += dt

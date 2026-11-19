@@ -51,14 +51,14 @@ def planet_orbit(
     return x_storage, y_storage
 
 planets_params = {
-    #"mercury": {"r_perihelion": 0.3075, "r_aphelion": 0.4667, "mass": 1},
+    "mercury": {"r_perihelion": 0.3075, "r_aphelion": 0.4667, "mass": 1},
     "earth": {"r_perihelion": 1.0, "r_aphelion": 1.0, "mass": 1},
-    #"venus": {"r_perihelion": 0.7184, "r_aphelion": 0.7282, "mass": 1},
-    #"mars" : {"r_perihelion": 1.381, "r_aphelion": 1.666, "mass": 1},
+    "venus": {"r_perihelion": 0.7184, "r_aphelion": 0.7282, "mass": 1},
+    "mars" : {"r_perihelion": 1.381, "r_aphelion": 1.666, "mass": 1},
     #"jupiter" : {"r_perihelion": 4.95, "r_aphelion": 5.36, "mass": 1},
     #"saturn" : {"r_perihelion": 9.03, "r_aphelion": 10.05, "mass": 1},
     #"halley's_comet" : {"r_perihelion": 0.59, "r_aphelion": 33, "mass": 1},
-    "apophis" : {"r_perihelion": 0.75, "r_aphelion": 1.1, "mass": 1},
+    #"apophis" : {"r_perihelion": 0.75, "r_aphelion": 1.1, "mass": 1},
     }
 
 planets_trajectories = {

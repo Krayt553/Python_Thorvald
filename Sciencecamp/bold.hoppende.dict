@@ -17,24 +17,26 @@ global x, y, vx, vy, ax, ay, t, g, E_mek
 # -------------------------
 N           = 2         # Antal bolde
 Draw_track  = True      # Der tegnes en streg efter bolden
-g           = 9.8       # Tyngdeaccelleratioen
-dt          = 0.005      # Tidsskridtet
+g           = -9.8      # Tyngdeaccelleratioen
+dt          = 0.005     # Tidsskridtet
 t           = 0         # Starttiden
 
 
 # Definer numpy arrays til at håndtere boldenes positioner, masser, hastigheder m.m.
-x       = np.array([0.0]*(N+1))         # x-position (m)
-y       = np.array([0.0]*(N+1))         # y-position (m)
-vx      = np.array([0.0]*(N+1))         # hastighed i x-aksens retning (m/s)
-vy      = np.array([0.0]*(N+1))         # hastighed i y-aksens retning (m/s)
-vx_old  = np.array([0.0]*(N+1))         # hastighed i x-aksens retning (m/s)
-vy_old  = np.array([0.0]*(N+1))         # hastighed i y-aksens retning (m/s)
-m       = np.array([0.0]*(N+1))         # masse (kg)
-r       = np.array([0.0]*(N+1))         # radius (m)
-ax      = np.array([0.0]*(N+1))         # accelleration i x-aksens retning
-ay      = np.array([0.0]*(N+1))         # accelleration i y-aksens retning
-E_mek   = np.array([0.0]*(N+1))         # Mekanisk energi i y-aksens retning
-colors  = np.empty(N+1, dtype=object)   # Boldens farve
+
+class Ball: 
+    def __init__(self, x, y, vx, vy, vxOld, vyOld, m, r, ax, ay, colors):
+        self.x       = x         # x-position (m)
+        self.y       = y        # y-position (m)
+        self.vx      = vx         # hastighed i x-aksens retning (m/s)
+        self.vy      = vy         # hastighed i y-aksens retning (m/s)
+        self.vxOld   = vxOld         # hastighed i x-aksens retning (m/s)
+        self.vyOld   = vyOld         # hastighed i y-aksens retning (m/s)
+        self.m       = m         # masse (kg)
+        self.r       = r         # radius (m)
+        self.ax      = ax         # accelleration i x-aksens retning
+        self.ay      = ay         # accelleration i y-aksens retning
+
 
 xmin, xmax = 0, 25   #Størrelsen af kassen
 ymin, ymax = 0, 25
@@ -42,31 +44,17 @@ ymin, ymax = 0, 25
 # -------------------------
 # Bold-parametre (arrays)
 # -------------------------
-m[1]        = 0.1     # Bold 1's masse (kg)
-r[1]        = 0.8     # Bold 1's radius (m)
-x[1]        = 22      # Bold 1's startposition (m)
-y[1]        = 12.5    # Bold 1's startposition (m)
-vx[1]       = -1.0    # Bold 1's vandrette starthastighed (m/s)
-vy[1]       = 1.0     # Bold 1's lodrette starthastighed (m/s)
-ax[1]       = 0.0     # Bold 1's vandrette accelleration (m/s^2)
-ay[1]       = -g      # Bold 1's lodrette accelleration (m/s^2)
-E_mek[1]    = 0.5*m[1]*(vx[1]**2+vy[1]**2) + m[1]*g*y[1] # Bold 1's mekaniske energi
-colors[1]   = 'red'   # Bold 1's farve
 
-# Tilsvarende for bold 2 hvis der er 2 bolde
-if N == 2:
-    m[2]        = 0.1
-    r[2]        = 0.5
-    x[2]        = 10.5
-    y[2]        = 10.5
-    vx[2]       = -8.0
-    vy[2]       = 15.0
-    ax[2]       = 0.0
-    ay[2]       = -g
-    E_mek[2]    = 0.5*m[1]*(vx[1]**2+vy[1]**2) + m[1]*g*y[1]
-    colors[2]   = 'blue'
+for i in range(N): 
+    x = np.arrange(xmin, xmax, 1)
+    y = np.arrange(ymin, ymax, 1)
+    vx = np.arrange(-5, 5, 1)
+    vy = np.arrange(-5, 5, 1)
+    m = np.arrange(1, 10, 1)
+    r = np.arrange(0.1, 0.5, 0.1)
+    ax = 0
+    ay = g
 
-print('test',colors)
 
 # -------------------------
 # Historik til spor -  

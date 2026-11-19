@@ -10,7 +10,7 @@ vy =     0  # m/s
 vx =     0  # m/s
 vTotal = 0  # m/s
 
-dt  = 0.1  # s
+dt  = 0.01  # s
 t   = 0     # s
 
 xPendul = 5 # mellem -r og +r
