@@ -1,0 +1,84 @@
+# Program der simulere en raket.
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+
+m   =  1000 # kg
+Fm  = 30000 # N 
+g   = -9.82 # m/s^2
+rho = 1.22  # kg/m^3
+cw  = 0.65  # 
+
+# Find rakettens frontareal ud fra diameter
+
+D = 0.25             # m 
+A = math.pi * (D/2)**2 # m^2
+
+y  = 0 
+vy = 0
+t  = 0
+
+dt = 0.001
+
+# Loop, hvor vi beregner det næste skridt ud fra det sidste. 
+
+done = False
+
+ts  = []
+ys  = []
+vys = []
+
+G = 6.67e-11
+M = 5.97e+24
+
+while not done: 
+
+    Fd = - 0.5 * rho * vy**2 * A * cw * np.sign(vy)
+
+    r = 6371000 + y
+    g = - G*M / r**2
+
+    Fg   = m * g
+    Fres = Fm + Fg + Fd
+    Fy   = Fres
+    ay   = Fy / m     
+    vy  += ay * dt
+    y   += vy * dt
+    t   += dt
+
+    ts.append(t)
+    ys.append(y)
+    vys.append(vy)
+
+    if t > 30: 
+        Fm = 0
+    else: 
+        m -= 20 *dt
+
+    if y < 0: 
+        done = True
+
+    if vy < 0: 
+        A = 10 # m^2
+
+    if y < 500 and vy < 0: 
+        A = 50 
+
+print("Impact speed %.2f" % vy)
+print("Final mass %.2f" % m)
+
+plt.figure
+
+plt.subplot(234)
+plt.plot(ts, ys)
+plt.xlabel("t / [s]")
+plt.ylabel("h / [m]")
+plt.grid(True)
+
+plt.subplot(233)
+plt.plot(ts, vys)
+plt.xlabel("t / [s]")
+plt.ylabel("v / [m/s]")
+plt.grid(True)
+
+plt.show()

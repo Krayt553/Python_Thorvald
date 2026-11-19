@@ -1,0 +1,150 @@
+
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jan 18 15:55:36 2026
+
+@author: hha
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+global x, y, vx, vy, ax, ay, t, g, E_mek
+
+# -------------------------
+# Parametre
+# -------------------------
+N           = 2         # Antal bolde
+Draw_track  = True      # Der tegnes en streg efter bolden
+g           = 9.8       # Tyngdeaccelleratioen
+dt          = 0.005      # Tidsskridtet
+t           = 0         # Starttiden
+
+
+# Definer numpy arrays til at håndtere boldenes positioner, masser, hastigheder m.m.
+x  = np.array([0.0]*(N+1))    # x-position (m)
+y  = np.array([0.0]*(N+1))    # y-position (m)
+vx = np.array([0.0]*(N+1))    # hastighed i x-aksens retning (m/s)
+vy = np.array([0.0]*(N+1))    # hastighed i y-aksens retning (m/s)
+vx_old = np.array([0.0]*(N+1))    # hastighed i x-aksens retning (m/s)
+vy_old = np.array([0.0]*(N+1))    # hastighed i y-aksens retning (m/s)
+m  = np.array([0.0]*(N+1))    # masse (kg)
+r  = np.array([0.0]*(N+1))    # radius (m)
+ax = np.array([0.0]*(N+1))    # accelleration i x-aksens retning
+ay = np.array([0.0]*(N+1))    # accelleration i y-aksens retning
+E_mek = np.array([0.0]*(N+1))    # Mekanisk energi i y-aksens retning
+colors = np.empty(N+1, dtype=object)  #Boldens farve
+
+
+xmin, xmax = 0, 25   #Størrelsen af kassen
+ymin, ymax = 0, 25
+
+# -------------------------
+# Bold-parametre (arrays)
+# -------------------------
+m[1]        = 0.1     # Bold 1's masse (kg)
+r[1]        = 0.8     # Bold 1's radius (m)
+x[1]        = 22      # Bold 1's startposition (m)
+y[1]        = 12.5    # Bold 1's startposition (m)
+vx[1]       = -1.0    # Bold 1's vandrette starthastighed (m/s)
+vy[1]       = 1.0     # Bold 1's lodrette starthastighed (m/s)
+ax[1]       = 0.0     # Bold 1's vandrette accelleration (m/s^2)
+ay[1]       = -g      # Bold 1's lodrette accelleration (m/s^2)
+E_mek[1]    = 0.5*m[1]*(vx[1]**2+vy[1]**2) + m[1]*g*y[1] # Bold 1's mekaniske energi
+colors[1]   = 'red'   # Bold 1's farve
+
+# Tilsvarende for bold 2 hvis der er 2 bolde
+if N == 2:
+    m[2]        = 0.1
+    r[2]        = 0.5
+    x[2]        = 10.5
+    y[2]        = 10.5
+    vx[2]       = -8.0
+    vy[2]       = 15.0
+    ax[2]       = 0.0
+    ay[2]       = -g
+    E_mek[2]    = 0.5*m[1]*(vx[1]**2+vy[1]**2) + m[1]*g*y[1]
+    colors[2]   = 'blue'
+
+print('test',colors)
+
+# -------------------------
+# Historik til spor -  
+# -------------------------
+x_hist = [[] for _ in range(N+1)]
+y_hist = [[] for _ in range(N+1)]
+
+# -------------------------
+# Lav en figur hvor animationen skal vises i
+# -------------------------
+fig, axes = plt.subplots()
+axes.set_xlim(xmin, xmax)
+axes.set_ylim(ymin, ymax)
+axes.set_aspect('equal')
+
+balls = []
+tracks = []
+
+for i in range(N+1):
+    ball = plt.Circle((x[i], y[i]), r[i], color=colors[i]) # Define size, color, and position of balls
+    axes.add_patch(ball)
+    balls.append(ball)
+    track, = axes.plot([], [], color=colors[i], lw=1)
+    tracks.append(track)
+
+# -------------------------
+# Opdateringsfunktion
+
+#HER SKAL I INDSÆTTE FYSIKKEN!!!!
+
+# -------------------------
+def update(frame):
+    global x, y, vx, vy, az, ay, t
+
+    t = t+dt
+
+    for i in range(N+1):
+        vx_old[i] = vx[i] # Save the x-velocity from the previous time step
+        vy_old[i] = vy[i] # Save the y-velocity from the previous time step
+
+        vx[i] = vx[i] + ax[i]*dt
+        vy[i] = vy[i] + ay[i]*dt
+        
+        x[i] = x[i] + vx[i]*dt
+        y[i] = y[i] + vy[i]*dt
+        
+        # Vægkollisioner
+        if y[i] < ymin:
+            vy[i] = - vy[i]
+            y[i]  = - y[i]
+
+        if x[i] > xmax:
+            vx[i] = - vx[i]
+            x[i]  = 2*xmax - x[i]
+
+        if x[i] < xmin:
+            vx[i] = - vx[i]
+            x[i]  = 2*xmin + x[i]
+
+        # Gem historik
+        x_hist[i].append(x[i])
+        y_hist[i].append(y[i])
+
+        # Opdater grafik
+        balls[i].center = (x[i], y[i])
+        tracks[i].set_data(x_hist[i], y_hist[i])
+
+    if Draw_track:
+        return balls + tracks
+    else:
+        return balls
+
+# -------------------------
+# Animation
+# -------------------------
+ani = animation.FuncAnimation(
+    fig, update, frames=6, interval=0, blit=True
+)
+
+plt.show()
