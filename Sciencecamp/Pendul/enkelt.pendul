@@ -10,7 +10,7 @@ vy =     0  # m/s
 vx =     0  # m/s
 vTotal = 0  # m/s
 
-dt  = 0.01  # s
+dt  = 0.1  # s
 t   = 0     # s
 
 xPendul = 5 # mellem -r og +r
@@ -27,7 +27,7 @@ def get_afstand(yPendul, xPendul, yStart, xStart):
     
     return(hypotenuse)
 
-for i in range (10000): 
+for i in range (1000): 
     vinkel = math.atan2(xPendul, yPendul) - math.pi
     vTotal = (vy**2 + vx**2)**(1/2)
 

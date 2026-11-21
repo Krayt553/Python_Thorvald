@@ -1,10 +1,12 @@
 import math as m
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import numpy as np
 
-animation = True
-plot = True
-N   = 1000
+
+animation = False
+plot      = True
+N         = 1000
 
 m1  = 1 # kg
 m2  = 1 # kg 
@@ -18,18 +20,18 @@ g  = -9.82 # m/s^2
 theta1 = 0.5*m.pi
 theta2 = - 1.5*m.pi
 
-x1 = 1 # m 
+x1 = 0 # m 
 y1 = 0 # m 
-x2 = 2 # m 
+x2 = 0 # m 
 y2 = 0 # m 
-
-x1s = np.array([None] * N)
-y1s = np.array([None] * N)
-x2s = np.array([None] * N)
-y2s = np.array([None] * N) 
 
 dt = 0.01 # s
 t  = 0    # s
+
+x1s=[]
+y1s=[]
+x2s=[]
+y2s=[]
 
 ts      = np.array([None] * N)
 av1s    = np.array([None] * N)
@@ -66,12 +68,6 @@ def get_acceleration_2(g, m1, m2, theta1, theta2, L1, L2, vv1, vv2):
 
     return(broek)
 
-    dy = yPendul - yStart
-    dx = xPendul - xStart
-    hypotenuse = (dy**2 + dx**2)**(1/2)
-    
-    return(hypotenuse)
-
 for i in range (N): 
     av1 = get_acceleration_1(g, m1, m2, theta1, theta2, L1, L2, vv1, vv2)
     av2 = get_acceleration_2(g, m1, m2, theta1, theta2, L1, L2, vv1, vv2)
@@ -89,13 +85,6 @@ for i in range (N):
     y2 = L2 * m.cos(theta2) + y1
     x2 = L2 * m.sin(theta2) + x1
 
-    # Arrays til animation
-    y1s[i] = y1
-    x1s[i] = x1
-
-    y2s[i] = y2
-    x2s[i] = x2
-
     # lister til grafer
     ts[i] = t
     av1s[i] = av1
@@ -106,11 +95,26 @@ for i in range (N):
     theta2s[i] = theta2
 
     t += dt
+    x1s.append(x1)
+    y1s.append(y1)
+    x2s.append(x2)
+    y2s.append(y2)
+
+    # Animation 
+    if animation: 
+        plt.figure(1)
+
+        plt.clf()
+        plt.axis([-2*L1,2*L1,-2*L2,2*L2])
+        plt.plot([x1, 0], [y1, 0], markersize=10) 
+        plt.plot([x2, x1], [y2, y1], markersize=10)
+        plt.plot(x2s, y2s, 'r-') 
+        plt.pause(dt)
 
     # Plot forskellige værdier. De øverste grafer er det øverste pendul og omvendt.
     if plot: 
-        
-        plt.figure(1)
+        plt.figure(1 if plot==False else 2)
+
         plt.subplot(231)
         plt.plot(ts, av1s,'b-',markersize=1)
         plt.xlabel("Time / [s]")
@@ -149,24 +153,6 @@ for i in range (N):
         plt.ylabel("Radians / [r]")
         plt.grid(True)
 
-# Animation 
-if animation: 
-
-    plt.figure(1 if plot==False else 2)
-
-    fig, ax = plt.subplots()
-    ax.set_aspect('equal')
-    ball1, = ax.plot([], [], 'ro')
-    path1, = ax.plot([], [], 'b-', linewidth=1)
-    ball2, = ax.plot([], [], 'ro')
-    path2, = ax.plot([], [], 'b-', linewidth=1)
-
-    def update(frame):
-        ball1.set_data([x1s[frame]], [y1s[frame]])
-        path1.set_data(x1s[:frame + 1], y1s[:frame + 1])
-        ball2.set_data([x2s[frame]], [y2s[frame]])
-        path2.set_data(x2s[:frame + 1], y2s[:frame + 1])
-        return ball1, path1, ball2, path2
 
 
-plt.show()
+
