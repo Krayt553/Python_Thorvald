@@ -11,13 +11,15 @@ dt = 0.005
 # Kassens størrelse
 xMin, xMax   = 0, 10
 yMin, yMax   = 0, 10
+
+# Størrelsen på hastigheden
 vxMin, vxMax = -2, 2
 vyMin, vyMax = -2, 2
 
 # Bolde defineres som klasse
 
 class Ball: 
-    def __init__(self, x, y, vx, vy, ax, ay, eMek, m, r,):
+    def __init__(self, x, y, vx, vy, ax, ay, eMek, m, r):
         self.x       = x         # x-position (m)
         self.y       = y         # y-position (m)
         self.m       = m         # masse (kg)
@@ -65,6 +67,18 @@ def update(frame):
     global ballList
 
     for i in range(len(ballList)):
+        if ballList[i].y + ballList[i].vy*dt < yMin:
+            ballList[i].vy = - ballList[i].vy
+            ballList[i].y  = - ballList[i].y
+
+        if ballList[i].x + ballList[i].vx*dt > xMax:
+            ballList[i].vx = - ballList[i].vx
+            ballList[i].x  = 2*xMax - ballList[i].x
+
+        if ballList[i].x + ballList[i].vx*dt < xMin:
+            ballList[i].vx = - ballList[i].vx
+            ballList[i].x  = 2*xMin + ballList[i].x
+        
         ballList[i].vx += ballList[i].ax * dt
         ballList[i].vy += ballList[i].ay * dt
         
@@ -72,18 +86,6 @@ def update(frame):
         ballList[i].y += ballList[i].vy * dt
 
         ballsFig[i].center = (ballList[i].x, ballList[i].y)
-
-        if ballList[i].y < yMin:
-            ballList[i].vy = - ballList[i].vy
-            ballList[i].y  = - ballList[i].y
-
-        if ballList[i].x > xMax:
-            ballList[i].vx = - ballList[i].vx
-            ballList[i].x  = 2*xMax - ballList[i].x
-
-        if ballList[i].x < xMin:
-            ballList[i].vx = - ballList[i].vx
-            ballList[i].x  = 2*xMin + ballList[i].x
 
     return(ballsFig)
 
