@@ -17,7 +17,7 @@ global x, y, vx, vy, ax, ay, t, g, E_mek
 # -------------------------
 N           = 2         # Antal bolde
 Draw_track  = True      # Der tegnes en streg efter bolden
-g           = 9.8       # Tyngdeaccelleratioen
+g           = 0       # Tyngdeaccelleratioen
 dt          = 0.005      # Tidsskridtet
 t           = 0         # Starttiden
 
