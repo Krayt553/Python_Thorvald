@@ -17,7 +17,6 @@ vxMin, vxMax = -2, 2
 vyMin, vyMax = -2, 2
 
 # Bolde defineres som klasse
-
 class Ball: 
     def __init__(self, x, y, vx, vy, ax, ay, eMek, m, r):
         self.x       = x         # x-position (m)
@@ -33,7 +32,6 @@ class Ball:
 ballList = []
 
 # Vi laver en masse bolde
-
 for i in range(N): 
     ball = Ball(
         x    = random.randint(xMin, xMax), 
@@ -48,44 +46,71 @@ for i in range(N):
         )
     ballList.append(ball)
 
+# Der sættes en graf op
 fig, axes = plt.subplots()
 axes.set_xlim(xMin, xMax)
 axes.set_ylim(yMin, yMax)
 axes.set_aspect('equal')
 
+# Der laves in masse forskellige boldeartists i listen. 
 ballsFig = []
 
 for i in range(N):
     ball = plt.Circle(
         (ballList[i].x, ballList[i].y), 
-        ballList[i].r, color='red'
+        ballList[i].r, color='blue'
         ) # Define size, color, and position of balls
     axes.add_patch(ball)
     ballsFig.append(ball)
 
+
+def update_collisions(ballList, ball):
+    for i, b in enumerate(ballList):
+        if b.x + 2*math.pi*b.r ==  ball.x + 2*math.pi*ball.r: # x-værdierne + radius sammenlignes
+            # Kollision
+        elif b.y + 2*math.pi*b.r == ball.x + 2*math.pi*ball.r: # y-værdierne + radius sammenlignes
+            # Kollision
+    
+    return()
+
 def update(frame):
     global ballList
 
-    for i in range(len(ballList)):
-        if ballList[i].y + ballList[i].vy*dt < yMin:
-            ballList[i].vy = - ballList[i].vy
-            ballList[i].y  = - ballList[i].y
+    for i, b in enumerate(ballList):
 
-        if ballList[i].x + ballList[i].vx*dt > xMax:
-            ballList[i].vx = - ballList[i].vx
-            ballList[i].x  = 2*xMax - ballList[i].x
+        # integrationer
+        b.vx += b.ax * dt
+        b.vy += b.ay * dt
+        b.x += b.vx * dt
+        b.y += b.vy * dt
 
-        if ballList[i].x + ballList[i].vx*dt < xMin:
-            ballList[i].vx = - ballList[i].vx
-            ballList[i].x  = 2*xMin + ballList[i].x
-        
-        ballList[i].vx += ballList[i].ax * dt
-        ballList[i].vy += ballList[i].ay * dt
-        
-        ballList[i].x += ballList[i].vx * dt
-        ballList[i].y += ballList[i].vy * dt
+        # venstre og højre vægge
+        if b.x - b.r < xMin:
+            b.x  = 2*xMin + 2*b.r - b.x   # mirror about the wall
+            b.vx = -b.vx
+        elif b.x + b.r > xMax:
+            b.x  = 2*xMax - 2*b.r - b.x 
+            b.vx = -b.vx
 
-        ballsFig[i].center = (ballList[i].x, ballList[i].y)
+        # nedre vægge
+        if b.y - b.r < yMin:
+            b.y  = 2*yMin + 2*b.r - b.y
+            b.vy = -b.vy
+        elif b.y + b.r > yMax:
+            b.y  = 2*yMax - 2*b.r - b.y
+            b.vy = -b.vy
+
+        # Kollisioner
+
+        xTemp = b.x
+        yTemp = b.y
+
+            
+        ballListTemp = ballList.pop(i)
+
+
+
+        ballsFig[i].center = (b.x, b.y)
 
     return(ballsFig)
 

@@ -4,8 +4,8 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 
 
-animation = False
-plot      = True
+animation = True
+plot      = False
 N         = 1000
 
 m1  = 1 # kg

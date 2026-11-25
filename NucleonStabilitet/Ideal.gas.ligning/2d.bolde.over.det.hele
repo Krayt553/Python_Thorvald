@@ -1,0 +1,100 @@
+import math
+import random 
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+N  = 100
+g  = -9.82
+t  = 0 
+dt = 0.005
+
+# Kassens størrelse
+xMin, xMax   = 0, 10
+yMin, yMax   = 0, 10
+
+# Størrelsen på hastigheden
+vxMin, vxMax = -2, 2
+vyMin, vyMax = -2, 2
+
+# Bolde defineres som klasse
+class Ball: 
+    def __init__(self, x, y, vx, vy, ax, ay, eMek, m, r):
+        self.x       = x         # x-position (m)
+        self.y       = y         # y-position (m)
+        self.m       = m         # masse (kg)
+        self.r       = r         # radius (m)
+        self.vx      = vx        # hastighed i x-aksens retning (m/s)
+        self.vy      = vy        # hastighed i y-aksens retning (m/s)
+        self.ax      = ax        # accelleration i x-aksens retning
+        self.ay      = ay        # accelleration i y-aksens retning
+        self.eMek    = eMek      # Boldens mekaniske energi 
+
+ballList = []
+
+# Vi laver en masse bolde
+
+for i in range(N): 
+    ball = Ball(
+        x    = random.randint(xMin, xMax), 
+        y    = random.randint(yMin, yMax), 
+        vx   = random.randint(vxMin, vxMax), 
+        vy   = random.randint(vyMin, vyMax), 
+        ax   = 0, 
+        ay   = 0, 
+        eMek = 0, 
+        m    = 0.1,
+        r    = 0.1
+        )
+    ballList.append(ball)
+
+fig, axes = plt.subplots()
+axes.set_xlim(xMin, xMax)
+axes.set_ylim(yMin, yMax)
+axes.set_aspect('equal')
+
+ballsFig = []
+
+for i in range(N):
+    ball = plt.Circle(
+        (ballList[i].x, ballList[i].y), 
+        ballList[i].r, color='red'
+        ) # Define size, color, and position of balls
+    axes.add_patch(ball)
+    ballsFig.append(ball)
+
+def update(frame):
+    global ballList
+
+    for i,b in enumerate(ballList):
+
+        # integrationer
+        b.vx += b.ax * dt
+        b.vy += b.ay * dt        
+        b.x += b.vx * dt
+        b.y += b.vy * dt
+
+        # venstre og højre vægge
+        if b.x - b.r < xMin:
+            b.x  = 2*xMin + 2*b.r - b.x   
+            b.vx = -b.vx
+        elif b.x + b.r > xMax:
+            b.x  = 2*xMax - 2*b.r - b.x 
+            b.vx = -b.vx
+
+        # nedre vægge
+        if b.y - b.r < yMin:
+            b.y  = 2*yMin + 2*b.r - b.y
+            b.vy = -b.vy
+        elif b.y + b.r > yMax:
+            b.y  = 2*yMax - 2*b.r - b.y
+            b.vy = -b.vy
+
+        ballsFig[i].center = (b.x, b.y)
+
+    return(ballsFig)
+
+ani = animation.FuncAnimation(
+    fig, update, frames=6, interval=0, blit=True
+)
+
+plt.show()

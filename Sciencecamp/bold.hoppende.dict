@@ -27,15 +27,15 @@ t           = 0         # Starttiden
 class Ball: 
     def __init__(self, x, y, vx, vy, vxOld, vyOld, m, r, ax, ay, colors):
         self.x       = x         # x-position (m)
-        self.y       = y        # y-position (m)
-        self.vx      = vx         # hastighed i x-aksens retning (m/s)
-        self.vy      = vy         # hastighed i y-aksens retning (m/s)
-        self.vxOld   = vxOld         # hastighed i x-aksens retning (m/s)
-        self.vyOld   = vyOld         # hastighed i y-aksens retning (m/s)
+        self.y       = y         # y-position (m)
+        self.vx      = vx        # hastighed i x-aksens retning (m/s)
+        self.vy      = vy        # hastighed i y-aksens retning (m/s)
+        self.vxOld   = vxOld     # hastighed i x-aksens retning (m/s)
+        self.vyOld   = vyOld     # hastighed i y-aksens retning (m/s)
         self.m       = m         # masse (kg)
         self.r       = r         # radius (m)
-        self.ax      = ax         # accelleration i x-aksens retning
-        self.ay      = ay         # accelleration i y-aksens retning
+        self.ax      = ax        # accelleration i x-aksens retning
+        self.ay      = ay        # accelleration i y-aksens retning
 
 
 xmin, xmax = 0, 25   #Størrelsen af kassen
@@ -46,12 +46,12 @@ ymin, ymax = 0, 25
 # -------------------------
 
 for i in range(N): 
-    x = np.arrange(xmin, xmax, 1)
-    y = np.arrange(ymin, ymax, 1)
-    vx = np.arrange(-5, 5, 1)
-    vy = np.arrange(-5, 5, 1)
-    m = np.arrange(1, 10, 1)
-    r = np.arrange(0.1, 0.5, 0.1)
+    x = np.arange(xmin, xmax, 1)
+    y = np.arange(ymin, ymax, 1)
+    vx = np.arange(-5, 5, 1)
+    vy = np.arange(-5, 5, 1)
+    m = np.arange(1, 10, 1)
+    r = np.arange(0.1, 0.5, 0.1)
     ax = 0
     ay = g
 
